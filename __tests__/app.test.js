@@ -3,6 +3,7 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection.js");
+const endpointsDoc = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(data);
@@ -40,6 +41,50 @@ describe("GET/api/topics", () => {
           expect(topic.hasOwnProperty("slug")).toBe(true);
           expect(topic.hasOwnProperty("description")).toBe(true);
         });
+      });
+  });
+});
+
+describe("GET /api", () => {
+  test("returns an object", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.endpoints.constructor === Object).toBe(true);
+      });
+  });
+
+  test("returns an object of objects that contains properties of description queries and exampleResponse ", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        const endpoints = response.body.endpoints;
+        for (let endpoint in endpoints) {
+          expect(endpoints[endpoint].hasOwnProperty("description")).toBe(true);
+          expect(endpoints[endpoint].hasOwnProperty("queries")).toBe(true);
+          expect(endpoints[endpoint].hasOwnProperty("exampleResponse")).toBe(
+            true
+          );
+        }
+      });
+  });
+
+  test("returns an object that matches the contents of the JSON file", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.endpoints).toEqual(endpointsDoc);
+      });
+  });
+  test("should return 404 when is made on a route that does not exist", () => {
+    return request(app)
+      .get("/not-a-route")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("path not found");
       });
   });
 });
