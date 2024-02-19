@@ -2,7 +2,6 @@ const express = require('express')
 const app = express()
 const { getAllTopics } = require('./controllers/topics.controller.js')
 
-app.get('/api', getAllEndPoints)
 
 app.get('/api/topics', getAllTopics)
 
