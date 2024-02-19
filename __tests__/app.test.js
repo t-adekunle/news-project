@@ -100,3 +100,8 @@ describe('GET /api/articles/:article_id', () => {
         });
     });
 });
+
+/* next tests: 
+- test for correct properties
+- test for 404
+- test for 400 */

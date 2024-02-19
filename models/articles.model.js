@@ -15,4 +15,6 @@ const selectArticleById = (article_id) => {
   });
 };
 
+/* next in function, add error handling*/
+
 module.exports = { selectArticleById };
