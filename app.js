@@ -4,10 +4,13 @@ const {
   getAllTopics,
   getAllEndPoints,
 } = require("./controllers/topics.controller.js");
+const { getArticleById } = require('./controllers/articles.controller.js')
 
 app.get("/api", getAllEndPoints);
 
 app.get("/api/topics", getAllTopics);
+
+app.get("/api/articles/:article_id", getArticleById);
 
 app.all("/*", (request, response, next) => {
   response.status(404).send({ msg: "path not found" });

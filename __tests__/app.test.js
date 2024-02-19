@@ -88,3 +88,15 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe('GET /api/articles/:article_id', () => {
+    test('returns an object', () => {
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response) => {
+            const article = response.body.article
+          expect(article.constructor).toBe(Object)
+        });
+    });
+});
