@@ -106,6 +106,7 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then((response) => {
         const article = response.body.article;
+        expect(article.article_id).toBe(1)
         expect(article.hasOwnProperty("author")).toBe(true);
         expect(article.hasOwnProperty("title")).toBe(true);
         expect(article.hasOwnProperty("article_id")).toBe(true);
