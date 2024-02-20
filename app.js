@@ -4,11 +4,16 @@ const {
   getAllTopics,
   getAllEndPoints,
 } = require("./controllers/topics.controller.js");
-const { getArticleById } = require('./controllers/articles.controller.js')
+const {
+  getAllArticles,
+  getArticleById,
+} = require("./controllers/articles.controller.js");
 
 app.get("/api", getAllEndPoints);
 
 app.get("/api/topics", getAllTopics);
+
+app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
 
@@ -17,13 +22,12 @@ app.all("/*", (request, response, next) => {
 });
 
 app.use((err, request, response, next) => {
-    if (err.code === '22P02'){
-        response.status(400).send({msg:'bad request'})
-    }
-    else {
-        next(err)
-    }
-})
+  if (err.code === "22P02") {
+    response.status(400).send({ msg: "bad request" });
+  } else {
+    next(err);
+  }
+});
 
 app.use((err, request, response, next) => {
   if (err.status && err.msg) {
