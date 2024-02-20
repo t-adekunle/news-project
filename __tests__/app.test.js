@@ -4,6 +4,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection.js");
 const endpointsDoc = require("../endpoints.json");
+const sorted = require("jest-sorted");
 
 beforeEach(() => {
   return seed(data);
@@ -89,47 +90,97 @@ describe("GET /api", () => {
   });
 });
 
-describe('GET /api/articles/:article_id', () => {
-    test('returns an object', () => {
-        return request(app)
-        .get("/api/articles/1")
-        .expect(200)
-        .then((response) => {
-            const article = response.body.article
-          expect(article.constructor).toBe(Object)
-        });
-    })
-    test('returns an object with correct properties ', () => {
-        return request(app)
-        .get("/api/articles/1")
-        .expect(200)
-        .then((response) => {
-            const article = response.body.article
-            expect(article.hasOwnProperty('author')).toBe(true)
-            expect(article.hasOwnProperty('title')).toBe(true)
-            expect(article.hasOwnProperty('article_id')).toBe(true)
-            expect(article.hasOwnProperty('body')).toBe(true)
-            expect(article.hasOwnProperty('topic')).toBe(true)
-            expect(article.hasOwnProperty('created_at')).toBe(true)
-            expect(article.hasOwnProperty('votes')).toBe(true)
-            expect(article.hasOwnProperty('article_img_url')).toBe(true)
-        })
-    });
-    test('returns 404 when given an id number that does not exist', () => {
-        return request(app)
-        .get("/api/articles/500")
-        .expect(404)
-        .then((response) => {
-            expect(response.body.msg).toBe("not found")
-        })
-    });
+describe("GET /api/articles/:article_id", () => {
+  test("returns an object", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        const article = response.body.article;
+        expect(article.constructor).toBe(Object);
+      });
+  });
+  test("returns an object with correct properties ", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        const article = response.body.article;
+        expect(article.hasOwnProperty("author")).toBe(true);
+        expect(article.hasOwnProperty("title")).toBe(true);
+        expect(article.hasOwnProperty("article_id")).toBe(true);
+        expect(article.hasOwnProperty("body")).toBe(true);
+        expect(article.hasOwnProperty("topic")).toBe(true);
+        expect(article.hasOwnProperty("created_at")).toBe(true);
+        expect(article.hasOwnProperty("votes")).toBe(true);
+        expect(article.hasOwnProperty("article_img_url")).toBe(true);
+      });
+  });
+  test("returns 404 when given an id number that does not exist", () => {
+    return request(app)
+      .get("/api/articles/500")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("not found");
+      });
+  });
 
-    test('returns 400 when given invalid id', () => {
-        return request(app)
-        .get("/api/articles/dog")
-        .expect(400)
-        .then((response) => {
-            expect(response.body.msg).toBe('bad request')
-        })
-    });
+  test("returns 400 when given invalid id", () => {
+    return request(app)
+      .get("/api/articles/dog")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("returns an array", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        expect(Array.isArray(response.body.articles)).toBe(true);
+      });
+  });
+  test("returns an array of objects with the correct properties", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const articles = response.body.articles;
+        expect(articles.length).toBe(13);
+        articles.forEach((article) => {
+          expect(article.hasOwnProperty("author")).toBe(true);
+          expect(article.hasOwnProperty("title")).toBe(true);
+          expect(article.hasOwnProperty("article_id")).toBe(true);
+          expect(article.hasOwnProperty("topic")).toBe(true);
+          expect(article.hasOwnProperty("created_at")).toBe(true);
+          expect(article.hasOwnProperty("votes")).toBe(true);
+          expect(article.hasOwnProperty("article_img_url")).toBe(true);
+          expect(article.hasOwnProperty("comment_count")).toBe(true);
+        });
+      });
+  });
+  test("return an array with articles sorted descending order by date", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const articles = response.body.articles;
+        expect(articles).toBeSortedBy("created_at", {
+          descending: true,
+          coerce: true,
+        });
+      });
+  });
+  test("return 404 error when endpoint does not exist", () => {
+    return request(app)
+      .get("/api/not-an-article-route")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe('not found');
+      });
+  });
 });
