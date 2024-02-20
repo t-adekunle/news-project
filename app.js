@@ -13,8 +13,17 @@ app.get("/api/topics", getAllTopics);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.all("/*", (request, response, next) => {
-  response.status(404).send({ msg: "path not found" });
+  response.status(404).send({ msg: "not found" });
 });
+
+app.use((err, request, response, next) => {
+    if (err.code === '22P02'){
+        response.status(400).send({msg:'bad request'})
+    }
+    else {
+        next(err)
+    }
+})
 
 app.use((err, request, response, next) => {
   if (err.status && err.msg) {

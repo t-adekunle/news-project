@@ -27,7 +27,7 @@ describe("GET/api/topics", () => {
       .get("/api/not-a-route")
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("path not found");
+        expect(response.body.msg).toBe("not found");
       });
   });
   test("should return an array of objects each with a slug property and description property", () => {
@@ -84,7 +84,7 @@ describe("GET /api", () => {
       .get("/not-a-route")
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("path not found");
+        expect(response.body.msg).toBe("not found");
       });
   });
 });
@@ -98,10 +98,38 @@ describe('GET /api/articles/:article_id', () => {
             const article = response.body.article
           expect(article.constructor).toBe(Object)
         });
+    })
+    test('returns an object with correct properties ', () => {
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response) => {
+            const article = response.body.article
+            expect(article.hasOwnProperty('author')).toBe(true)
+            expect(article.hasOwnProperty('title')).toBe(true)
+            expect(article.hasOwnProperty('article_id')).toBe(true)
+            expect(article.hasOwnProperty('body')).toBe(true)
+            expect(article.hasOwnProperty('topic')).toBe(true)
+            expect(article.hasOwnProperty('created_at')).toBe(true)
+            expect(article.hasOwnProperty('votes')).toBe(true)
+            expect(article.hasOwnProperty('article_img_url')).toBe(true)
+        })
+    });
+    test('returns 404 when given an id number that does not exist', () => {
+        return request(app)
+        .get("/api/articles/500")
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe("not found")
+        })
+    });
+
+    test('returns 400 when given invalid id', () => {
+        return request(app)
+        .get("/api/articles/dog")
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('bad request')
+        })
     });
 });
-
-/* next tests: 
-- test for correct properties
-- test for 404
-- test for 400 */

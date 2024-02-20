@@ -11,10 +11,12 @@ const selectArticleById = (article_id) => {
   }
 
   return db.query(sqlString, queryValues).then(({ rows }) => {
+    if (rows.length === 0){
+        return Promise.reject({status: 404, msg: "not found"})
+    }
     return rows[0];
   });
 };
 
-/* next in function, add error handling*/
 
 module.exports = { selectArticleById };
