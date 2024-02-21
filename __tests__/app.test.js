@@ -206,7 +206,7 @@ describe('GET /api/articles/:article_id/comments', () => {
               });
         })
     })
-    test('returns an empty array when article_id exists but there are no comments with that article_id', () => {
+  test('returns an empty array when article_id exists but there are no comments with that article_id', () => {
       return request(app)
       .get("/api/articles/2/comments")
       .expect(200)

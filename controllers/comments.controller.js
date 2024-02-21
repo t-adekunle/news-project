@@ -1,13 +1,13 @@
 const { selectCommentsByArticleId } = require("../models/comments.model");
-const { checkExists } = require("../utils.js");
 const { selectArticleById } = require("../models/articles.model");
 
 const getCommentsByArticleId = (request, response, next) => {
   article_id = request.params.article_id;
   const promises = [
-    checkExists("articles", "article_id", article_id),
+    selectArticleById(article_id),
     selectCommentsByArticleId(article_id),
   ];
+  
 
   Promise.all(promises)
     .then((promiseResolutions) => {
