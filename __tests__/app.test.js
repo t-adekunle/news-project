@@ -232,3 +232,19 @@ describe('GET /api/articles/:article_id/comments', () => {
       });
   });
 });
+
+describe('POST "/api/articles/:article_id/comments"', () => {
+  test('adds new comment to database and returns new comment back to user', () => {
+    const newComment = { username: 'lurker',
+    body: 'This is so interesting!'}
+    return request(app)
+    .post('/api/articles/2/comments')
+    .send(newComment)
+    .expect(201)
+    .then((response) => {
+      expect(response.body.comment.author).toBe('lurker')
+      expect(response.body.comment.body).toBe('This is so interesting!')
+    })
+  });
+  test('')
+});
