@@ -4,7 +4,6 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection.js");
 const endpointsDoc = require("../endpoints.json");
-const sorted = require("jest-sorted");
 
 beforeEach(() => {
   return seed(data);
@@ -91,13 +90,13 @@ describe("GET /api", () => {
 });
 
 describe("GET /api/articles/:article_id", () => {
-  test("returns an object", () => {
+  test("returns an object with correct article_id", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
       .then((response) => {
         const article = response.body.article;
-        expect(article.constructor).toBe(Object);
+        expect(article.article_id).toBe(1);
       });
   });
   test("returns an object with correct properties ", () => {
@@ -106,7 +105,6 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then((response) => {
         const article = response.body.article;
-        expect(article.article_id).toBe(1)
         expect(article.hasOwnProperty("author")).toBe(true);
         expect(article.hasOwnProperty("title")).toBe(true);
         expect(article.hasOwnProperty("article_id")).toBe(true);
@@ -225,15 +223,4 @@ describe('GET /api/articles/:article_id/comments', () => {
         expect(comments.length).toBe(0)
       })
     })
-
-
-    
-  
-   
-
-    /*test for errors: 
-    - invalid article id 
-    - non-existent 
-    - when there are no comments with that article_id (look at lecture from yesterday(today))
-    */
 });

@@ -16,12 +16,4 @@ const getCommentsByArticleId = (request, response, next) => {
     })
 }
 
-/*
-  selectCommentsByArticleId(article_id).then((comments) => {
-        response.status(200).send({comments})
-    })
-    .catch((err) => {
-        next(err)
-    })*/ 
-
 module.exports = { getCommentsByArticleId }
