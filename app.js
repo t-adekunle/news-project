@@ -7,7 +7,11 @@ const {
 const {
   getAllArticles,
   getArticleById,
-} = require("./controllers/articles.controller.js");
+} = require("./controllers/articles.controller.js");;
+const {
+    getCommentsByArticleId
+} = require ('./controllers/comments.controller.js')
+
 
 app.get("/api", getAllEndPoints);
 
@@ -16,6 +20,8 @@ app.get("/api/topics", getAllTopics);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 
 app.all("/*", (request, response, next) => {
   response.status(404).send({ msg: "not found" });

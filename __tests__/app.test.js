@@ -176,12 +176,64 @@ describe("GET /api/articles", () => {
         });
       });
   });
-  test("return 404 error when endpoint does not exist", () => {
-    return request(app)
-      .get("/api/not-an-article-route")
-      .expect(404)
+});
+
+describe('GET /api/articles/:article_id/comments', () => {
+    test('return an array', () => {
+        return request(app)
+      .get("/api/articles/9/comments")
+      .expect(200)
       .then((response) => {
-        expect(response.body.msg).toBe('not found');
-      });
-  });
+        expect(Array.isArray(response.body.comments)).toBe(true)
+      })
+    });
+    test('return an array of comment objects each with the correct properties and article_id', () => {
+        return request(app)
+        .get("/api/articles/9/comments")
+        .expect(200)
+        .then((response) => {
+            const comments = response.body.comments
+          expect(comments.length).toBe(2)
+          comments.forEach((comment) => {
+            expect(comment.article_id).toBe(9)
+            expect(comment.hasOwnProperty('comment_id')).toBe(true)
+            expect(comment.hasOwnProperty('votes')).toBe(true)
+            expect(comment.hasOwnProperty('created_at')).toBe(true)
+            expect(comment.hasOwnProperty('author')).toBe(true)
+            expect(comment.hasOwnProperty('body')).toBe(true)
+          })
+        })
+    })
+    test('return an array of comment objects ordered with most recent first', () => {
+        return request(app)
+        .get("/api/articles/9/comments")
+        .expect(200)
+        .then((response) => {
+            const comments = response.body.comments
+            expect(comments).toBeSortedBy("created_at", {
+                descending: true,
+                coerce: true,
+              });
+        })
+    })
+    test('returns an empty array when article_id exists but there are no comments with that article_id', () => {
+      return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((response) => {
+        const comments = response.body.comments
+        expect(comments.length).toBe(0)
+      })
+    })
+
+
+    
+  
+   
+
+    /*test for errors: 
+    - invalid article id 
+    - non-existent 
+    - when there are no comments with that article_id (look at lecture from yesterday(today))
+    */
 });
