@@ -177,14 +177,6 @@ describe("GET /api/articles", () => {
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
-    test('return an array', () => {
-        return request(app)
-      .get("/api/articles/9/comments")
-      .expect(200)
-      .then((response) => {
-        expect(Array.isArray(response.body.comments)).toBe(true)
-      })
-    });
     test('return an array of comment objects each with the correct properties and article_id', () => {
         return request(app)
         .get("/api/articles/9/comments")
