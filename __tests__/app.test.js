@@ -177,14 +177,6 @@ describe("GET /api/articles", () => {
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
-    test('return an array', () => {
-        return request(app)
-      .get("/api/articles/9/comments")
-      .expect(200)
-      .then((response) => {
-        expect(Array.isArray(response.body.comments)).toBe(true)
-      })
-    });
     test('return an array of comment objects each with the correct properties and article_id', () => {
         return request(app)
         .get("/api/articles/9/comments")
@@ -214,7 +206,7 @@ describe('GET /api/articles/:article_id/comments', () => {
               });
         })
     })
-    test('returns an empty array when article_id exists but there are no comments with that article_id', () => {
+  test('returns an empty array when article_id exists but there are no comments with that article_id', () => {
       return request(app)
       .get("/api/articles/2/comments")
       .expect(200)
@@ -223,4 +215,20 @@ describe('GET /api/articles/:article_id/comments', () => {
         expect(comments.length).toBe(0)
       })
     })
+  test('returns 404 when article does not exist', () => {
+    return request(app)
+      .get("/api/articles/500/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("not found");
+      });
+  });
+  test('returns 400 when article is invalid', () => {
+    return request(app)
+      .get("/api/articles/not-an-article/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
 });
