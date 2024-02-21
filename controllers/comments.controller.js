@@ -28,7 +28,6 @@ const postComment = (request, response, next) => {
 insertComment(article_id, username, body).then((comment) => {
     response.status(201).send({comment})
 }).catch((err) => {
-    console.log(err)
     next(err)
 })
 }

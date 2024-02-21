@@ -16,16 +16,18 @@ const selectCommentsByArticleId = (article_id) => {
 };
 
 const insertComment = (article_id, username, body) => {
-console.log('hello from model')
-
-  
   const sqlQuery = `INSERT INTO comments (article_id, author, body)
                     VALUES ($1, $2, $3)
                     RETURNING *`;
+  if (!username || !body){
+    return Promise.reject({status: 400, msg: 'bad request'})
+  }
 
   return db.query(sqlQuery, [article_id, username, body])
-
   .then((result) => {
+    if (result.rows.length === 0){
+      return Promise.reject({status: 404, msg: 'not found'})
+    }
     return result.rows[0]
   })
 };

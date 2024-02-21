@@ -41,6 +41,14 @@ app.use((err, request, response, next) => {
   }
 });
 
+app.use((err, request, response, next) =>{
+  if (err.code === "23503"){
+    response.status(404).send({msg:"not found"})
+  } else {
+    next(err)
+  }
+})
+
 app.use((err, request, response, next) => {
   if (err.status && err.msg) {
     response.status(err.status).send({ msg: err.msg });

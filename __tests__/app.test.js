@@ -246,5 +246,37 @@ describe('POST "/api/articles/:article_id/comments"', () => {
       expect(response.body.comment.body).toBe('This is so interesting!')
     })
   });
-  test('')
+
+  test('returns 400 when sent without a body', () => {
+    return request(app)
+    .post('/api/articles/2/comments')
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('bad request')
+    })
+  })
+
+  test('returns 400 when sent with invalid article ID', () => {
+    const newComment = { username: 'lurker',
+    body: 'This is so interesting!'}
+    return request(app)
+    .post('/api/articles/not-an-article/comments')
+    .send(newComment)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('bad request')
+    })
+  })
+
+  test('returns 404 when sent with and article ID that does not exist', () => {
+    const newComment = { username: 'lurker',
+    body: 'This is so interesting!'}
+    return request(app)
+    .post('/api/articles/999/comments')
+    .send(newComment)
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('not found')
+    })
+  })
 });
