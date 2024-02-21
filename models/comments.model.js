@@ -22,6 +22,7 @@ const countCommentsByArticleID = (article_id) => {
 };
 
 const selectCommentsByArticleId = (article_id) => {
+
   let sqlQuery = `SELECT * FROM comments`;
   const queries = [];
 
@@ -32,9 +33,6 @@ const selectCommentsByArticleId = (article_id) => {
   sqlQuery += ` ORDER BY created_at DESC`
   
   return db.query(sqlQuery, queries).then((results) => {
-    if (results.rows.length === 0) {
-      return Promise.reject({ status: 404, msg: "not found" });
-    }
     return results.rows;
 })
 }

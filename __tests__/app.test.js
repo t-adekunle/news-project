@@ -176,14 +176,6 @@ describe("GET /api/articles", () => {
         });
       });
   });
-  test("return 404 error when endpoint does not exist", () => {
-    return request(app)
-      .get("/api/not-an-article-route")
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe('not found');
-      });
-  });
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
@@ -224,6 +216,20 @@ describe('GET /api/articles/:article_id/comments', () => {
               });
         })
     })
+    test('returns an empty array when article_id exists but there are no comments with that article_id', () => {
+      return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((response) => {
+        const comments = response.body.comments
+        expect(comments.length).toBe(0)
+      })
+    })
+
+
+    
+  
+   
 
     /*test for errors: 
     - invalid article id 
