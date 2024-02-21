@@ -4,13 +4,9 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const db = require("../db/connection.js");
 const endpointsDoc = require("../endpoints.json");
-// const alteredDate = require ('../models/comments.model')
+
 
 beforeEach(() => {
-  // const mockedDate = new Date(1708552468726);
-
-  //   jest.useFakeTimers("modern");
-  //   jest.setSystemTime(mockedDate);
 
   return seed(data);
   
@@ -18,7 +14,7 @@ beforeEach(() => {
 
 afterAll(() => {
   db.end();
-  // jest.useRealTimers();
+ 
 });
 
 describe("GET/api/topics", () => {
