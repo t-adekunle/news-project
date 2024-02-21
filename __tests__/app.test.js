@@ -215,4 +215,20 @@ describe('GET /api/articles/:article_id/comments', () => {
         expect(comments.length).toBe(0)
       })
     })
+  test('returns 404 when article does not exist', () => {
+    return request(app)
+      .get("/api/articles/500/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("not found");
+      });
+  });
+  test('returns 400 when article is invalid', () => {
+    return request(app)
+      .get("/api/articles/not-an-article/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
 });
