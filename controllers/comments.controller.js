@@ -1,6 +1,9 @@
-const { selectCommentsByArticleId, insertComment } = require("../models/comments.model");
+const {
+  selectCommentsByArticleId,
+  insertComment,
+  deleteCommentById,
+} = require("../models/comments.model");
 const { selectArticleById } = require("../models/articles.model");
-
 
 const getCommentsByArticleId = (request, response, next) => {
   const article_id = request.params.article_id;
@@ -8,7 +11,6 @@ const getCommentsByArticleId = (request, response, next) => {
     selectArticleById(article_id),
     selectCommentsByArticleId(article_id),
   ];
-  
 
   Promise.all(promises)
     .then((promiseResolutions) => {
@@ -21,15 +23,29 @@ const getCommentsByArticleId = (request, response, next) => {
 };
 
 const postComment = (request, response, next) => {
-    const article_id = request.params.article_id
-    const username = request.body.username
-    const body = request.body.body
+  const article_id = request.params.article_id;
+  const username = request.body.username;
+  const body = request.body.body;
 
-insertComment(article_id, username, body).then((comment) => {
-    response.status(201).send({comment})
-}).catch((err) => {
-    next(err)
-})
-}
+  insertComment(article_id, username, body)
+    .then((comment) => {
+      response.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
-module.exports = { getCommentsByArticleId, postComment };
+const removeCommentById = (request, response, next) => {
+  const comment_id = request.params.comment_id;
+
+  deleteCommentById(comment_id)
+    .then(() => {
+      response.status(204).send({});
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getCommentsByArticleId, postComment, removeCommentById };
