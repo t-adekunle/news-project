@@ -372,6 +372,18 @@ describe("PATCH /api/articles/:article_id ", () => {
         expect(response.body.msg).toBe("bad request");
       });
   });
+
+  test("returns 400 if article Id is invalid", () => {
+    const newVote = 1;
+    const updateVotes = { inc_votes: newVote };
+    return request(app)
+      .patch("/api/articles/not-an-article")
+      .send(updateVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
 });
 
 describe("DELETE /api/comments/:comment_id", () => {
