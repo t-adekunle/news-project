@@ -275,7 +275,40 @@ describe('POST "/api/articles/:article_id/comments"', () => {
       });
   });
 
-  
+  test('returns 400 when newComment is missing a username', () => {
+    const newComment = { body: "This is so interesting!" };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  })
+
+  test('returns 400 when newComment is missing a body', () => {
+    const newComment = { username: "lurker" };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  })
+
+  test('returns 404 when user is not in the database', () => {
+    const newComment = { username: "not-a-user", body: "Cool article"  };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("not found");
+      });
+  })
+
+
 });
 
 describe("PATCH /api/articles/:article_id ", () => {
