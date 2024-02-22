@@ -275,7 +275,7 @@ describe('POST "/api/articles/:article_id/comments"', () => {
       });
   });
 
-  test('returns 400 when newComment is missing a username', () => {
+  test("returns 400 when newComment is missing a username", () => {
     const newComment = { body: "This is so interesting!" };
     return request(app)
       .post("/api/articles/1/comments")
@@ -284,9 +284,9 @@ describe('POST "/api/articles/:article_id/comments"', () => {
       .then((response) => {
         expect(response.body.msg).toBe("bad request");
       });
-  })
+  });
 
-  test('returns 400 when newComment is missing a body', () => {
+  test("returns 400 when newComment is missing a body", () => {
     const newComment = { username: "lurker" };
     return request(app)
       .post("/api/articles/1/comments")
@@ -295,10 +295,10 @@ describe('POST "/api/articles/:article_id/comments"', () => {
       .then((response) => {
         expect(response.body.msg).toBe("bad request");
       });
-  })
+  });
 
-  test('returns 404 when user is not in the database', () => {
-    const newComment = { username: "not-a-user", body: "Cool article"  };
+  test("returns 404 when user is not in the database", () => {
+    const newComment = { username: "not-a-user", body: "Cool article" };
     return request(app)
       .post("/api/articles/1/comments")
       .send(newComment)
@@ -306,9 +306,7 @@ describe('POST "/api/articles/:article_id/comments"', () => {
       .then((response) => {
         expect(response.body.msg).toBe("not found");
       });
-  })
-
-
+  });
 });
 
 describe("PATCH /api/articles/:article_id ", () => {
@@ -404,21 +402,50 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 });
 
-describe('GET /api/users', () => {
-  test('returns an array of topics objects with correct properties', () => {
+describe("GET /api/users", () => {
+  test("returns an array of topics objects with correct properties", () => {
     return request(app)
-    .get("/api/users")
-    .expect(200)
-    .then((response) => {
-      const users = response.body.users;
-      expect(users.length).toBe(4);
-      users.forEach((user) => {
-        expect(user.hasOwnProperty("username")).toBe(true);
-        expect(user.hasOwnProperty("name")).toBe(true);
-        expect(user.hasOwnProperty("avatar_url")).toBe(true);
-
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const users = response.body.users;
+        expect(users.length).toBe(4);
+        users.forEach((user) => {
+          expect(user.hasOwnProperty("username")).toBe(true);
+          expect(user.hasOwnProperty("name")).toBe(true);
+          expect(user.hasOwnProperty("avatar_url")).toBe(true);
+        });
       });
-    });
+  });
+});
+describe("GET /api/articles?:topic_query", () => {
+  test("returns an array of articles with the specified topic value", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then((response) => {
+        const articles = response.body.articles;
+        expect(articles.length).toBe(12);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("returns 400 when topic does not exist", () => {
+    return request(app)
+      .get("/api/articles?topic=not-a-topic")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
   });
 
-})
+  test("returns 404 when topic exists but does not have any associated articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("not found");
+      });
+  });
+});

@@ -1,11 +1,18 @@
+
 const {
   selectAllArticles,
   selectArticleById,
   updateArticleByArticleId
-} = require("../models/articles.model");
+} = require("../models/articles.model")
+
+
 
 const getAllArticles = (request, response, next) => {
-  selectAllArticles()
+  
+  const topic = request.query.topic
+
+
+  selectAllArticles(topic)
     .then((articles) => {
       response.status(200).send({ articles });
     })
