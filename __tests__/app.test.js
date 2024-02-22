@@ -5,12 +5,16 @@ const data = require("../db/data/test-data");
 const db = require("../db/connection.js");
 const endpointsDoc = require("../endpoints.json");
 
+
 beforeEach(() => {
+
   return seed(data);
+  
 });
 
 afterAll(() => {
   db.end();
+ 
 });
 
 describe("GET/api/topics", () => {
@@ -231,4 +235,58 @@ describe('GET /api/articles/:article_id/comments', () => {
         expect(response.body.msg).toBe("bad request");
       });
   });
+});
+
+describe('POST "/api/articles/:article_id/comments"', () => {
+  test('adds new comment to database and returns new comment back to user', () => {
+    const newComment = { username: 'lurker',
+    body: 'This is so interesting!'}
+  
+    return request(app)
+    .post('/api/articles/2/comments')
+    .send(newComment)
+    .expect(201)
+    .then((response) => {
+      const comment = response.body.comment
+      expect(comment.author).toBe('lurker')
+      expect(comment.body).toBe('This is so interesting!')
+      expect(comment.article_id).toBe(2)
+      expect(comment.comment_id).toBe(19)
+      expect(comment.votes).toBe(0)
+      expect(comment.hasOwnProperty('created_at')).toBe(true)
+    })
+  });
+
+  test('returns 400 when sent without a body', () => {
+    return request(app)
+    .post('/api/articles/2/comments')
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('bad request')
+    })
+  })
+
+  test('returns 400 when sent with invalid article ID', () => {
+    const newComment = { username: 'lurker',
+    body: 'This is so interesting!'}
+    return request(app)
+    .post('/api/articles/not-an-article/comments')
+    .send(newComment)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('bad request')
+    })
+  })
+
+  test('returns 404 when sent with and article ID that does not exist', () => {
+    const newComment = { username: 'lurker',
+    body: 'This is so interesting!'}
+    return request(app)
+    .post('/api/articles/999/comments')
+    .send(newComment)
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('not found')
+    })
+  })
 });
