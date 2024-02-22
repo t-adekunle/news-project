@@ -7,6 +7,7 @@ const {
 const {
   getAllArticles,
   getArticleById,
+  patchArticleByArticleId
 } = require("./controllers/articles.controller.js");;
 const {
     getCommentsByArticleId, 
@@ -29,6 +30,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 
 app.post("/api/articles/:article_id/comments", postComment)
 
+app.patch("/api/articles/:article_id", patchArticleByArticleId)
+
 app.all("/*", (request, response, next) => {
   response.status(404).send({ msg: "not found" });
 });
@@ -42,6 +45,7 @@ app.use((err, request, response, next) => {
 });
 
 app.use((err, request, response, next) =>{
+ 
   if (err.code === "23503"){
     response.status(404).send({msg:"not found"})
   } else {

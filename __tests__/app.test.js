@@ -7,7 +7,6 @@ const endpointsDoc = require("../endpoints.json");
 
 
 beforeEach(() => {
-
   return seed(data);
   
 });
@@ -139,14 +138,6 @@ describe("GET /api/articles/:article_id", () => {
 });
 
 describe("GET /api/articles", () => {
-  test("returns an array", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then((response) => {
-        expect(Array.isArray(response.body.articles)).toBe(true);
-      });
-  });
   test("returns an array of objects with the correct properties", () => {
     return request(app)
       .get("/api/articles")
@@ -287,6 +278,74 @@ describe('POST "/api/articles/:article_id/comments"', () => {
     .expect(404)
     .then((response) => {
       expect(response.body.msg).toBe('not found')
+    })
+  })
+});
+
+describe('PATCH /api/articles/:article_id ', () => {
+  test('should return updated article object with correct votes value', () => {
+    const newVote = 1
+    const updateVotes = {inc_votes: newVote}
+    return request(app)
+    .patch("/api/articles/1")
+    .send(updateVotes)
+    .expect(200)
+    .then((response) => {
+      const article = response.body.article
+      expect(article.article_id).toBe(1)
+      expect(article.votes).toBe(101)
+    })
+  });
+
+  test('should decrement votes value when newVote value is negative', () => {
+    const newVote = -30
+    const updateVotes = {inc_votes: newVote}
+    return request(app)
+    .patch("/api/articles/1")
+    .send(updateVotes)
+    .expect(200)
+    .then((response) => {
+      const article = response.body.article
+      expect(article.article_id).toBe(1)
+      expect(article.votes).toBe(70)
+    })
+  });
+
+  test('returns 400 bad request if there is no patch body', () => {
+    const updateVotes = {}
+    return request(app)
+    .patch("/api/articles/1")
+    .send(updateVotes)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('bad request')
+      
+    })
+  })
+
+  test('returns 404 if article does not exist', () => {
+    const newVote = -30
+    const updateVotes = {inc_votes: newVote}
+    return request(app)
+    .patch("/api/articles/999")
+    .send(updateVotes)
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('not found')
+      
+    })
+  })
+
+  test('returns 400 if votes increment is invalid', () => {
+    const newVote = 'not-a-number'
+    const updateVotes = {inc_votes: newVote}
+    return request(app)
+    .patch("/api/articles/1")
+    .send(updateVotes)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('bad request')
+      
     })
   })
 });

@@ -29,4 +29,38 @@ const selectArticleById = (article_id) => {
   });
 };
 
-module.exports = { selectAllArticles, selectArticleById };
+const updateArticleByArticleId = (article_id, newVote) => {
+  const queryValues = []
+  let sqlString = `UPDATE articles
+  SET votes = votes`
+
+  if(!newVote || typeof newVote != 'number'){
+    return Promise.reject({status: 400, msg: 'bad request'})
+  }
+
+  if (newVote >= 0){
+    queryValues.push(newVote)
+    queryValues.push(article_id)
+    sqlString += ` + $1`
+  }
+
+  else if(newVote < 0){
+    const updatedVote = (Number(newVote.toString().slice(1)))
+    queryValues.push(updatedVote)
+    queryValues.push(article_id)
+    sqlString +=` - $1`
+  }
+
+  sqlString += ` WHERE article_id = $2
+  RETURNING *;`
+
+  return db.query(sqlString, queryValues).then(({rows}) => {
+    if (rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "not found" });
+    }
+    return rows[0]
+  })
+
+
+}
+module.exports = { selectAllArticles, selectArticleById, updateArticleByArticleId };
