@@ -22,17 +22,17 @@ const insertComment = (
   votes = 0,
   created_at = Date.now()
 ) => {
-  const alteredDate = new Date(created_at);
+  
 
-  const sqlQuery = `INSERT INTO comments (article_id, author, body, votes, created_at)
-                    VALUES ($1, $2, $3, $4, $5)
+  const sqlQuery = `INSERT INTO comments (article_id, author, body)
+                    VALUES ($1, $2, $3)
                     RETURNING *`;
   if (!username || !body) {
     return Promise.reject({ status: 400, msg: "bad request" });
   }
 
   return db
-    .query(sqlQuery, [article_id, username, body, votes, alteredDate])
+    .query(sqlQuery, [article_id, username, body])
     .then((result) => {
       if (result.rows.length === 0) {
         return Promise.reject({ status: 404, msg: "not found" });
