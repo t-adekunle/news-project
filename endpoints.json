@@ -95,6 +95,11 @@
       }
       
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deleted comment with corresponding comment_id",
+    "queries": [],
+    "exampleResponse": {}
   }
   
 }
