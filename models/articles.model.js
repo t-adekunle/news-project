@@ -58,7 +58,7 @@ const updateArticleByArticleId = (article_id, newVote) => {
     queryValues.push(article_id);
     sqlString += ` + $1`;
   } else if (newVote < 0) {
-    const updatedVote = Number(newVote.toString().slice(1));
+    const updatedVote = newVote.toString().slice(1);
     queryValues.push(updatedVote);
     queryValues.push(article_id);
     sqlString += ` - $1`;
