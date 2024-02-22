@@ -105,14 +105,15 @@ describe("GET /api/articles/:article_id", () => {
       .expect(200)
       .then((response) => {
         const article = response.body.article;
+        expect(article.article_id).toBe(1);
         expect(article.hasOwnProperty("author")).toBe(true);
         expect(article.hasOwnProperty("title")).toBe(true);
-        expect(article.hasOwnProperty("article_id")).toBe(true);
         expect(article.hasOwnProperty("body")).toBe(true);
         expect(article.hasOwnProperty("topic")).toBe(true);
         expect(article.hasOwnProperty("created_at")).toBe(true);
         expect(article.hasOwnProperty("votes")).toBe(true);
         expect(article.hasOwnProperty("article_img_url")).toBe(true);
+        expect(article.comment_count).toBe('11')
       });
   });
   test("returns 404 when given an id number that does not exist", () => {

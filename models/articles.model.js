@@ -22,12 +22,16 @@ const selectAllArticles = (topic) => {
 
 const selectArticleById = (article_id) => {
   const queryValues = [];
-  let sqlString = `SELECT * FROM articles`;
+  let sqlString = `SELECT articles.*, COUNT(comments.article_id) AS comment_count 
+  FROM articles 
+  LEFT JOIN comments ON comments.article_id=articles.article_id`;
 
   if (article_id) {
     queryValues.push(article_id);
-    sqlString += ` WHERE article_id = $1`;
+    sqlString += ` WHERE articles.article_id = $1`;
   }
+
+  sqlString += ` GROUP BY articles.article_id`
 
   return db.query(sqlString, queryValues).then(({ rows }) => {
     if (rows.length === 0) {
