@@ -441,21 +441,32 @@ describe("GET /api/articles?:topic_query", () => {
         });
       });
   });
-  test("returns 400 when topic does not exist", () => {
+  test("returns 404 when topic does not exist", () => {
     return request(app)
       .get("/api/articles?topic=not-a-topic")
-      .expect(400)
+      .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("bad request");
+        expect(response.body.msg).toBe("not found");
       });
   });
 
   test("returns 404 when topic exists but does not have any associated articles", () => {
     return request(app)
       .get("/api/articles?topic=paper")
-      .expect(404)
+      .expect(200)
       .then((response) => {
-        expect(response.body.msg).toBe("not found");
+        const articles = response.body.articles;
+        expect(articles.length).toBe(0)
       });
+    
+  });
+
+  test('returns 404 when topic is invalid (topic does not exist)', () => {
+    return request(app)
+    .get("/api/articles?topic=5")
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe("not found");
+    });
   });
 });
