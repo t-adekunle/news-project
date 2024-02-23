@@ -10,7 +10,9 @@ const { selectTopicByName } = require("../models/topics.model");
 
 const getAllArticles = (request, response, next) => {
   const topic = request.query.topic
-  const promises  = [selectTopicByName(topic), selectAllArticles(topic)]
+  const sort_by = request.query.sort_by
+  const order = request.query.order
+  const promises  = [selectTopicByName(topic), selectAllArticles(topic, sort_by, order)]
 
   Promise.all(promises).
   then((promiseResolutions) => {
