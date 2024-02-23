@@ -22,31 +22,10 @@ git clone https://github.com/t-adekunle/news-project.git
 
 ### Installing Dependencies
 
-To install the dependancies run:
+To install the dependencies run:
 
 ```
 npm install 
-```
-
-### Seed Local Database
-
-- To create the database:
-```
-npm run setup-dbs
-```
-
-- To seed the local database:
-```
-npm run seed
-```
-
-- To run the test suites:
-```
-npm run test
-```
-OR
-```
-npm t
 ```
 
 ### Creating environment variables
@@ -54,11 +33,12 @@ npm t
 To create the environment variables so that you can run this project locally:
 
 - create a file called .env.test and a file called .env.development
-- Typically the database names would not be included in the repo for security. I have included them so that the database can be viewed as part of my portfolio. This is not safe or standard practice. 
+- **Typically the database names would not be included in the repo for security. I have included them so that the database can be viewed as part of my portfolio. This is not safe or standard practice.**
 - in .env.test write 'PGDATABASE=<database_name_here>' This can be found in the setup_sql file and will end in _test
 - in .env.development write 'PGDATABASE=<database_name_here>' This can be found in the setup_sql file.
 - if this project is going to be public, double check that the .env files have been added to a .gitignore
 - Remember to run 'npm run setup-dbs' to create the databases
+
 
 ### Versions
 
