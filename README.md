@@ -3,7 +3,7 @@
 Link to hosted project (will land on list of all endpoints):
 https://news-project-r24g.onrender.com/api
 
-##Project Summary
+## Project Summary
 Welcome to my News API Project. 
 
 This project involves the building of an API so that application data can be accessed programmatically. 
@@ -12,17 +12,17 @@ All of the available endpoints are in the endpoints.json file.
 The functionality that has been implemented allows the user to access all of the endpoints with their description, access all topics, articles and users, access comments for a certain article and filter articles by topic.
 The user can also add a comment to an article and delete a comment as well as editing a specific article. 
 
-##Important Information 
+## Important Information 
 
-###Cloning:
+### Cloning:
 
 ```
 git clone https://github.com/t-adekunle/news-project.git
 ```
 
-###Installing Dependencies
+### Installing Dependencies
 
-####Developer Dependencies:
+#### Developer Dependencies:
 Jest:
 ```
 npm install --save-dev jest
@@ -43,7 +43,7 @@ Supertest:
 npm install supertest --save-dev
 ```
 
-####Dependencies:
+#### Dependencies:
 
 Dotenv:
 ```
@@ -65,7 +65,7 @@ Husky:
 npm i husky
 ```
 
-###Seed Local Database
+### Seed Local Database
 
 - To create the database:
 ```
@@ -86,7 +86,7 @@ OR
 npm t
 ```
 
-###Creating environment variables
+### Creating environment variables
 
 To create the environment variables so that you can run this project locally:
 
