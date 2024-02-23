@@ -1,4 +1,92 @@
-# Northcoders News API
+# News API
+
+Link to hosted project (will land on list of all endpoints):
+https://news-project-r24g.onrender.com/api
+
+##Project Summary
+Welcome to my News API Project. 
+
+This project involves the building of an API so that application data can be accessed programmatically. 
+It mimics the building of a real world backend service, such as Reddit, and provides this information to the front end architecture. 
+All of the available endpoints are in the endpoints.json file. 
+The functionality that has been implemented allows the user to access all of the endpoints with their description, access all topics, articles and users, access comments for a certain article and filter articles by topic.
+The user can also add a comment to an article and delete a comment as well as editing a specific article. 
+
+##Important Information 
+
+###Cloning:
+
+```
+git clone https://github.com/t-adekunle/news-project.git
+```
+
+###Installing Dependencies
+
+####Developer Dependencies:
+Jest:
+```
+npm install --save-dev jest
+```
+
+Jest Sorted:
+```
+npm install --save-dev jest-sorted
+```
+
+Pg-format:
+```
+npm install pg-format
+```
+
+Supertest:
+```
+npm install supertest --save-dev
+```
+
+####Dependencies:
+
+Dotenv:
+```
+npm i dotenv
+```
+
+Express:
+```
+npm i express
+```
+
+Postgres:
+```
+npm i pg
+```
+
+Husky:
+```
+npm i husky
+```
+
+###Seed Local Database
+
+- To create the database:
+```
+npm run setup-dbs
+```
+
+- To seed the local database:
+```
+npm run seed
+```
+
+- To run the test suites:
+```
+npm run test
+```
+OR
+```
+npm t
+```
+
+###Creating environment variables
 
 To create the environment variables so that you can run this project locally:
 
@@ -7,3 +95,7 @@ To create the environment variables so that you can run this project locally:
 - in .env.development write 'PGDATABASE=<database_name_here> This can be found in the setup_sql file.
 - if this project is going to be public, double check that the .env files have been added to a .gitignore
 - Remember to run 'npm run setup-dbs' to create the databases
+
+### Versions
+
+To run this project, a minimum of Node.js v21.5.0 and Postgres 8.11.3 is needed
