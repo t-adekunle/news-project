@@ -1,20 +1,27 @@
 const db = require("../db/connection.js");
 
 
-const selectAllArticles = (topic) => {
+const selectAllArticles = (topic, sort_by = "created_at", order = "desc") => {
+  const validSortBy = ['title', 'topic' , 'author', 'body', 'created_at', 'votes', 'comment_count']
+  const validOrder = ["asc", "desc"]
   const queries = [];
   let sqlString = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.body) AS comment_count FROM articles 
   LEFT JOIN comments ON comments.article_id=articles.article_id`;
 
+  if (!validSortBy.includes(sort_by) || !validOrder.includes(order)){
+    return Promise.reject({status:400, msg: "bad request"})
+  }
   if (topic) {
       queries.push(topic);
       sqlString += ` WHERE topic = $1`;
   
   }
-
   sqlString += ` GROUP BY articles.article_id`;
 
-  sqlString += ` ORDER BY created_at DESC`;
+
+  
+  sqlString += ` ORDER BY ${sort_by} ${order}`;
+ 
   return db.query(sqlString, queries).then(({ rows }) => {
     return rows;
   });
