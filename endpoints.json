@@ -113,6 +113,7 @@
   "PATCH /api/articles/:article_id": {
     "description": "updates votes value in article with corresponding article id and returns updated article",
     "queries": [],
+    "exampleRequest": { "inc_votes": 1},
     "exampleResponse": {
       "article": 
       {
