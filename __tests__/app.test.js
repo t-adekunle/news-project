@@ -45,7 +45,7 @@ describe("GET/api/topics", () => {
   });
 });
 
-describe("GET /api", () => {
+describe ("GET /api", () => {
   test("returns an object", () => {
     return request(app)
       .get("/api")
@@ -164,31 +164,32 @@ describe("GET /api/articles", () => {
         });
       });
   });
-});
-test("return an array with articles sorted descending order by date", () => {
-  return request(app)
-    .get("/api/articles")
-    .expect(200)
-    .then((response) => {
-      const articles = response.body.articles;
-      expect(articles).toBeSortedBy("created_at", {
-        descending: true,
-        coerce: true,
+  test("return an array with articles sorted descending order by date", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const articles = response.body.articles;
+        expect(articles).toBeSortedBy("created_at", {
+          descending: true,
+          coerce: true,
+        });
       });
-    });
-});
-test("returns articles sorted by specifed column if column specified", () => {
-  return request(app)
-    .get("/api/articles")
-    .expect(200)
-    .then((response) => {
-      const articles = response.body.articles;
-      expect(articles).toBeSortedBy("created_at", {
-        descending: true,
-        coerce: true,
+  });
+  test("returns articles sorted by specifed column if column specified", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const articles = response.body.articles;
+        expect(articles).toBeSortedBy("created_at", {
+          descending: true,
+          coerce: true,
+        });
       });
-    });
+  });
 });
+  
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("return an array of comment objects each with the correct properties and article_id", () => {
