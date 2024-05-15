@@ -491,7 +491,7 @@ describe("GET /api/articles?:topic_query", () => {
 });
 
 describe("GET/api/articles?sort_by=:column&order=:order", () => {
-  test("returns articles sorted reverse alphabetically when sort_by by specied column name", () => {
+  test("returns articles sorted reverse alphabetically when sort_by by specified column name", () => {
     return request(app)
       .get("/api/articles?sort_by=title")
       .expect(200)
@@ -559,3 +559,37 @@ describe("GET/api/articles?sort_by=:column&order=:order", () => {
       });
   });
 });
+
+describe("GET /api/users/:username", () => {
+  test('returns an object with correct username ', () => {
+    return request(app)
+    .get("/api/users/butter_bridge")
+    .expect(200)
+    .then((response) => {
+      const user = response.body.user
+      expect(user.username).toBe('butter_bridge')
+    })
+  });
+
+  test('returns object with username, avatar_url and name properties', () => {
+    return request(app)
+    .get("/api/users/icellusedkars")
+    .expect(200)
+    .then((response) => {
+      const user = response.body.user
+      expect(user.username).toBe('icellusedkars')
+      expect(user.name).toBe('sam')
+      expect(user.avatar_url).toBe('https://avatars2.githubusercontent.com/u/24604688?s=460&v=4')
+    })
+  });
+
+  test('returns 404 when username does not exist', () => {
+    return request(app)
+    .get("/api/users/not-a-user")
+    .expect(404)
+    .then((response) => {
+     expect(response.body.msg).toBe('not found')
+    })
+  });
+ 
+})
