@@ -593,3 +593,94 @@ describe("GET /api/users/:username", () => {
   });
  
 })
+
+describe.only('PATCH /api/comments/:comment_id', () => {
+  test('return an object of correct comment with updated vote value when newVote value is positive', () => {
+    const newVote = 1
+    const updateVotes = { inc_votes: newVote}
+    return request(app)
+    .patch("/api/comments/1")
+    .send(updateVotes)
+    .expect(200)
+    .then((response) => {
+      const comment = response.body.comment
+      expect(comment.comment_id).toBe(1)
+      expect(comment.votes).toBe(17)
+    })
+  });
+
+  test('return an object of correct comment with updated vote value when newVote value is negative', () => {
+    const newVote = -1
+    const updateVotes = { inc_votes: newVote}
+    return request(app)
+    .patch("/api/comments/1")
+    .send(updateVotes)
+    .expect(200)
+    .then((response) => {
+      const comment = response.body.comment
+      expect(comment.comment_id).toBe(1)
+      expect(comment.votes).toBe(15)
+    })
+  });
+
+test('return 404 when comment does not exist', () => {
+    const newVote = -1
+    const updateVotes = { inc_votes: newVote}
+    return request(app)
+    .patch("/api/comments/500")
+    .send(updateVotes)
+    .expect(404)
+    .then((response) => {
+     expect(response.body.msg).toBe('not found')
+    })
+  });
+
+  test('return 400 when comment id is invalid', () => {
+    const newVote = -1
+    const updateVotes = { inc_votes: newVote}
+    return request(app)
+    .patch("/api/comments/invalid-comment-id")
+    .send(updateVotes)
+    .expect(400)
+    .then((response) => {
+     expect(response.body.msg).toBe('bad request')
+    })
+  });
+
+  test('return 400 when newVote does not equal 1', () => {
+    const newVote = 50
+    const updateVotes = { inc_votes: newVote}
+    return request(app)
+    .patch("/api/comments/1")
+    .send(updateVotes)
+    .expect(400)
+    .then((response) => {
+     expect(response.body.msg).toBe('bad request')
+    })
+  });
+
+  test('returns 400 bad request when there is no patch body', () => {
+    const updateVotes = {}
+    return request(app)
+    .patch("/api/comments/1")
+    .send(updateVotes)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe("bad request")
+    })
+
+  });
+
+  test('returns 400 if votes increment is invalid', () => {
+    const newVote = "not-a-number"
+    const updateVotes = {inc_votes: newVote}
+    return request(app)
+    .patch("/api/comments/1")
+    .send(updateVotes)
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe("bad request")
+    })
+  });
+
+});

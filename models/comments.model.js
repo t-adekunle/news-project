@@ -58,8 +58,39 @@ const deleteCommentById = (comment_id) => {
   });
 };
 
+const updateCommentById = (comment_id, newVote) => {
+const queryValues = []
+let sqlQuery = `UPDATE comments SET votes = votes`
+
+if (!newVote){
+  return Promise.reject({status: 400, msg: "bad request"})
+}
+if (newVote != '-1' && newVote != '1'){
+  return Promise.reject({status: 400, msg: "bad request"})
+}
+
+
+if (newVote){
+  queryValues.push(newVote)
+  queryValues.push(comment_id)
+  sqlQuery += ` + $1`
+}
+sqlQuery += ` WHERE comment_id = $2 RETURNING *`
+
+
+return db.query(sqlQuery, queryValues).then(({rows}) => {
+if (rows.length === 0 ){
+  return Promise.reject({ status: 404, msg: "not found"})
+}
+
+return rows[0]
+
+})
+}
+
 module.exports = {
   selectCommentsByArticleId,
   insertComment,
   deleteCommentById,
+  updateCommentById
 };
